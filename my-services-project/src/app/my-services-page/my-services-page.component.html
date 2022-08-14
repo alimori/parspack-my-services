@@ -1,0 +1,117 @@
+<div class="container">
+    <div class="flex justify-between p-2">
+        <div>سرویس های من</div>
+        <div><i nz-icon nzType="ellipsis" nzTheme="outline"></i></div>
+    </div>
+    <div class="flex justify-center py-2 my-5">
+        <div style="width:300px">
+            <form>
+                <input nz-input placeholder="سرویس مورد نظر خود را جستجو کنید ..." [(ngModel)]="searchValue"
+                    class="bg-primary-100 rounded-md text-center border-0 text-primary" (keyup.enter)="search()"/>
+            </form>
+        </div>
+    </div>
+    <div class="my-5">
+        <ul class="flex">
+            <li class="flex-1 flex flex-col justify-center items-center" role="button">
+                <div class="hidden lg:block">
+                    <i nz-icon nzType="container" nzTheme="fill" class="text-xl text-primary"></i>
+                </div>
+                <div class="py-3 lg:py-2 text-primary border-b-2 lg:border-b-0">همه سرویس ها</div>
+                <div
+                    class="hidden lg:block px-2 py-1 rounded-lg lg:text-primary-200 lg:bg-primary-100 xl:text-gray-300 xl:bg-gray-100">
+                    {{listOfDisplayData.length}} سرویس </div>
+            </li>
+            <li *ngFor="let item of serviceTypes" class="flex-1 flex flex-col justify-center items-center"
+                role="button">
+                <div class="hidden lg:block">
+                    <i nz-icon nzType="{{item.icon}}" nzTheme="fill" class="text-xl"></i>
+                </div>
+                <div class="py-3 lg:py-2">{{item.title}}</div>
+                <div
+                    class="hidden lg:block px-2 py-1 rounded-lg lg:text-primary-200 lg:bg-primary-100 xl:text-gray-300 xl:bg-gray-100">
+                    {{item.number}} سرویس </div>
+            </li>
+            <li class="flex-1 flex flex-col justify-center items-center" role="button">
+                <div class="hidden lg:block">
+                    <i nz-icon nzType="switcher" nzTheme="fill" class="text-xl"></i>
+                </div>
+                <div class="py-3 lg:py-2">سایر محصولات</div>
+                <div
+                    class="hidden lg:block px-2 py-1 rounded-lg lg:text-primary-200 lg:bg-primary-100 xl:text-gray-300 xl:bg-gray-100">
+                    {{otherNumber}} سرویس </div>
+            </li>
+        </ul>
+
+    </div>
+    <div class="my-5">
+        <nz-table #nzTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="50"
+            [nzScroll]="{ y: '20rem' }">
+            <thead>
+                <tr class="text-primary-300">
+                    <th nzCustomFilter class="text-primary text-xs">
+                        <span class="text-primary text-xs">
+                            نام / مشخصه
+                        </span>
+                        <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="searchValue.length > 0"
+                            [nzDropdownMenu]="menu">
+                            <i nz-icon nzType="caret-down" class="text-primary"></i>
+                        </nz-filter-trigger>
+                    </th>
+                    <th>
+                        <span class="text-gray opacity-70 text-xs">هزینه
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-gray opacity-70 text-xs">
+                            تاریخ سررسید
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-gray opacity-70 text-xs">عملیات
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of nzTable.data" class="!group group-hover:!group hover:!group !text-gray">
+                    <td>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 rounded-full absolute" [class]="'bg-'+data.status"></div>
+                            <i nz-icon nzType="profile" nzTheme="fill" class="mx-5"></i>
+
+                            <span>{{ data.name }}</span>
+                        </div>
+
+                    </td>
+                    <td>{{ data.amount }} تومان (ماهیانه)</td>
+                    <td>{{ data.nextduedate | date: 'yyy/MM/dd'}}</td>
+                    <td class="!group-hover:group hover:!group">
+                        <button *ngIf="data.status==='Active'" nz-button nzType="default"
+                            class="rounded-md border-primary text-primary" style="width: 120px;">
+                            مدیریت سرویس </button>
+                        <button *ngIf="data.status==='Pending'" nz-button nzType="default"
+                            class="rounded-md border-primary text-primary opacity-40" style="width: 120px;">
+                            در حال اماده سازی</button>
+                        <button *ngIf="data.status==='Cancelled'" nz-button nzType="default"
+                            class="rounded-md border-primary text-primary" style="width: 120px;">
+                            مشاهده فاکتور </button>
+
+                        <i nz-icon nzType="more" nzTheme="outline"
+                            class="hidden mx-3 group-hover:block hover:!block"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+            <div class="ant-table-filter-dropdown">
+                <div class="search-box">
+                    <input type="text" nz-input placeholder="جستجوی نام" [(ngModel)]="searchValue" />
+                    <button nz-button nzSize="small" nzType="primary" (click)="search()"
+                        class="search-button">جستجو</button>
+                    <button nz-button nzSize="small" (click)="reset()">پاک کردن</button>
+                </div>
+            </div>
+        </nz-dropdown-menu>
+    </div>
+</div>
